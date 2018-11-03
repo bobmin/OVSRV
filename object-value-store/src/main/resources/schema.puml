@@ -1,0 +1,47 @@
+@startuml
+'Breite x Höhe
+'page 2x1 
+'left to right direction
+class bob_attribute_type << (E,#FF7700) Entity >> {
+	{static} int atyp_id
+}
+class bob_attribute << (E,#FF7700) Entity >> {
+	{static} int attr_id
+	int attr_atyp_id
+}
+class bob_form<Formulare> << (E,#FF7700) Entity >> {
+	{static} int form_id
+}
+class bob_form_attribute << (A,SkyBlue) Association >> {
+	int fa_form_id
+	int fa_attr_id
+}
+note top : Welche Attribute auf Formular?\n(Attribute gruppieren)
+class bob_object_type << (E,#FF7700) Entity >> {
+	{static} int otyp_id
+}
+class bob_object_type_form << (A,SkyBlue) Association >> {
+	int of_otyp_id
+	int of_form_id
+}
+note right : Womit kann Objekt bearbeiten werden?
+together {
+	class bob_object<Objekte> << (E,#FF7700) Entity >> {
+		{static} long obj_id
+		int obj_otyp_id
+	}
+	note bottom : Wer oder was hat Attribute?
+	class bob_value << (A,SkyBlue) Association >> {
+		long val_obj_id
+		int val_attr_id
+	}
+	note top : Welchen Wert hat das Attribut?
+}
+bob_attribute_type "1" -- "*" bob_attribute : atyp_id
+bob_object_type "1" -- "*" bob_object : otyp_id
+(bob_form, bob_attribute) . bob_form_attribute
+(bob_form, bob_object_type) . bob_object_type_form
+bob_value . (bob_object, bob_attribute)
+hide methods
+hide circle
+@enduml
