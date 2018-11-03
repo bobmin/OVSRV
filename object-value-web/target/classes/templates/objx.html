@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head lang="en" th:replace="/fragments :: basics">
+	<!-- fragments.html/basics -->
+</head>
+<body>
+	<div th:replace="/fragments :: header">
+		<!-- fragments.html/header -->
+	</div>
+
+	<div class="container">
+
+		<h2 th:if="${xForm} == null" th:text="${xObj.otyp.name + ', ' + xObj.name}">Fahrzeug, Auto</h2>
+
+		<div th:if="${#lists.isEmpty( xEds )}">
+			<p>Dem Objekttyp wurden noch keine Formulare zugeordnet.</p>
+		</div>
+						
+		<form id="eds" th:action="${'/admin/obj/' + xObj.id + '/attr'}" method="POST">
+
+			<th:block th:each="ed : ${xEds}">
+			
+				<h3 th:text="${ed.form.name}">Formularname</h3>
+			
+				<div class="form-group" th:each="val : ${ed.val}">
+					<label th:for="${'val_' + ed.form.id + '_' + val.attr.id}" 
+						th:text="${val.attr.name + ':'}">Attributname:</label> 
+						
+					<input type="text" class="form-control" 
+						th:id="${'val_' + ed.form.id + '_' + val.attr.id}"
+						th:name="${'val_' + ed.form.id + '_' + val.attr.id}" 
+						th:value="${val.valueFormatted}" 
+						th:if="${val.attr.atyp.column == 'VAL_STRING' or val.attr.atyp.column == 'VAL_NUMBER'}" />
+						
+					<select class="form-control"
+							th:id="${'val_' + ed.form.id + '_' + val.attr.id}"
+							th:name="${'val_' + ed.form.id + '_' + val.attr.id}" 
+							th:if="${val.attr.atyp.column == 'VAL_OBJECT'}">
+						<option></option>
+						<option th:each="x : ${@objRefBean.searchObjRef( val.attr.lookup.id )}" 
+								th:value="${x.id}"
+								th:selected="${x.id == val.valObject}" 
+								th:text="${x.label}">???</option>
+					</select>
+						
+				</div>
+				
+			</th:block>
+			
+			<input type="hidden" th:if="${_csrf}"
+				th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+			
+			<div style="margin-top: 25px;">
+				<button type="submit" class="btn btn-primary">Speichern</button>
+				<button type="button" th:onclick="${'gotoEntity(''obj'', -1);'}"
+					class="btn btn-default">Abbrechen</button>
+			</div>
+
+		</form>
+		
+		<div style="margin-top: 30px;">
+			<a href="#" data-toggle="tooltip" data-placement="auto right" 
+			th:title="${'Objekt-ID: ' + xObj.id}"><i 
+			class="glyphicon glyphicon-info-sign"></i> Seitendetails</a>		
+		</div>
+		
+	</div><!-- Ende/Container -->
+	
+	<script>
+		$(document).ready(function(){
+		    $('[data-toggle="tooltip"]').tooltip();   
+		});
+	</script>
+	
+</body></html>

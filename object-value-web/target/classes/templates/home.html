@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head lang="en" th:replace="/fragments :: basics">
+	<!-- fragments.html/basics -->
+</head>
+<body>
+	<div th:replace="/fragments :: header">
+		<!-- fragments.html/header -->
+	</div>
+
+	<div class="container">
+		<h2>STORE</h2>
+		
+		<p>Attributstypen, Objekttypen und Formulare mit GET abrufen oder per POST anlegen.</p>
+		<p><code>[GET|POST] /atyp</code></p>
+		<p><code>[GET|POST] /otyp</code></p>
+		<p><code>[GET|POST] /form</code></p>
+		
+		<p>Details (z.B. den Namen) vom Formular abrufen.</p>
+		<p><code>GET /form/{formId}</code></p>
+		<p>Attribute zum Formular abrufen.</p>
+		<p><code>GET /form/{formId}/attr</code></p>
+		
+		<p>Ein Formulare zum Objekt mit dessen Attributwerten abrufen.</p>
+		<p><code>GET /obj/{objId}/form/{formId}</code></p>
+		
+		
+		<h2>WEB</h2>
+		
+		<h3>Administrator</h3>
+		
+		<p><a href="/admin/atyp" data-toggle="tooltip" title="Template: atyp.html">Datentypen</a>, 
+			<a href="/admin/attr" data-toggle="tooltip" title="Template: attr.html">Attribute</a> oder 
+			<a href="/admin/otyp" data-toggle="tooltip" title="Template: otyp.html">Objekttypen</a> mit GET abrufen 
+			und mit POST hinzuf&uuml;gen.</p>
+		<p><code>[GET|POST] /admin/atyp</code><br />
+			<code>[GET|POST] /admin/attr</code><br />
+			<code>[GET|POST] /admin/otyp</code></p>
+		
+		<p>Die <a href="/admin/form" data-toggle="tooltip" title="Template: form.html">gespeicherten Formulare</a> mit 
+			GET abrufen und und mit POST ein neues Formular hinzuf&uuml;gen. 
+			Beim GET optional &uuml;ber den Query-Parameter "edit" ein Formular zum Umbenennen erg&auml;nzen.
+			Ein vorhandenes Formular &uuml;ber dessen ID per POST umbenennen.</p>
+		<p><code>[GET|POST] /admin/form</code><br />
+			<code>[GET] /admin/form?edit={formId}</code><br />
+			<code>[POST] /admin/form/{formId}</code></p>
+
+		<h3>Benutzer</h3>
+
+		<p>Gespeicherte Objekte mit GET abrufen und mit POST ein neues Objekt hinzuf&uuml;gen.
+			Bei der Neuanlage wird der Objekttyp erwartet und optional die Bezeichnung (das Attribut 0).</p>
+		<p><code>[GET|POST] /admin/obj</code><br />
+			<code>GET /admin/obj?query={search}</code></p>
+		
+		<p>Ein Objekt und seine Attribute abrufen. Die Auswahl der Attribute kann &uuml;ber das Formular 
+			eingeschr&auml;nkt werden.</p>
+		<p><code>GET /admin/obj/{objId}/attr</code><br />
+			<code>GET /admin/obj/{objId}/attr?form={formId}</code></p>
+		
+	</div>
+	<script>
+		$(document).ready(function(){
+		    $('[data-toggle="tooltip"]').tooltip();   
+		});
+	</script>
+</body>
+</html>

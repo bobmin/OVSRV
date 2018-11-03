@@ -1,0 +1,32 @@
+@startuml
+'Breite x Höhe
+'page 2x1 
+'left to right direction
+actor :Benutzer: as usr
+actor :Administrator: as adm
+usecase home as "Startseite aufrufen"
+usecase login as "Benutzer identifizieren"
+usecase usrobj as "Daten bearbeiten"
+usecase usrobjsearch as "Objekte durchsuchen
+über deren Attribute"
+usecase usrobjform as "Objekt bearbeiten
+über zugeordnetem Formular "
+usecase admrest as "Datenstruktur definieren
+---
+Attributtypen verwalten
+Attribute verwalten
+Objekttypen verwalten"
+usecase admform as "Formulare bereitstellen
+---
+Formular hinzufügen/umbenennen/löschen
+..Erweitert..
+Attribute auf Formular platzieren
+Formular den Objekttypen zuweisen"
+usr --> home
+home --> usrobj
+usrobj --> usrobjsearch
+usrobjsearch --> usrobjform
+usrobj <.. login
+adm --> admrest
+admrest --> admform
+@enduml

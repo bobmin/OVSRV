@@ -1,0 +1,22 @@
+@startuml
+'Breite x Höhe
+'page 2x1 
+'left to right direction
+(*) --> "Einträge auflisten" as objlist
+if "Bearbeitung?" then
+-->[nein] "Neuanlage anbieten"
+--> "Eintrag erzeugen"
+--> (*)
+else
+--> "Details zeigen"
+partition "andere Seite" {
+--> "Bearbeitung anbieten"
+endif
+--> if "Abbruch?"
+-->[nein] "Daten anlegen/speichern" as objsave
+else 
+--> objlist
+endif
+objsave --> (*)
+}
+@enduml

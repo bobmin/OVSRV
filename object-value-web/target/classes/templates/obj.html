@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head lang="en" th:replace="/fragments :: basics">
+	<!-- fragments.html/basics -->
+</head>
+<body>
+	<div th:replace="/fragments :: header">
+		<!-- fragments.html/header -->
+	</div>
+
+	<div class="container">
+	
+		<div th:if="${bob_header_message} != null" class="alert alert-success" style="margin-bottom: 25px;">
+			<strong>Erfolgreich!</strong> <span th:text="${bob_header_message}"></span>
+		</div>
+	
+		<h2>Gespeicherte Objekte</h2>
+		
+		<form id="formSearchObj" action="/admin/obj" method="GET"
+			class="form-inline" style="margin-bottom: 1rem;">
+			<div class="form-group">
+				<label for="filter" class="sr-only">Suchwert:</label>
+				<input id="filter" name="filter" type="text" placeholder="Suchwert" 
+					th:value="${filterValue}" class="form-control"/>
+			</div>
+			<button type="submit" class="btn btn-primary">Suche starten</button>
+		</form>
+		
+		<div th:if="${#lists.isEmpty( xObjArray )}">
+			<p>Keine Elemente vorhanden.</p>
+		</div>
+		
+		<div th:unless="${#lists.isEmpty( xObjArray )}">
+			<table class="table table-striped table-hover">
+				<thead>
+					<tr>
+						<th>ID</th>
+						<th>Objekttyp</th>
+						<th>Bezeichnung</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:each="x : ${xObjArray}">
+						<td th:text="${x.id}">987</td>
+						<td th:text="${x.otyp.name}">Objekttyp</td>
+						<td th:text="${x.name}">Bezeichnung</td>
+						<td><button type="button" class="btn btn-default btn-xs" 
+							th:onclick="${'gotoEntity(''obj'', ' + x.id + ', ''attr'');'}">Attribute</button>
+						<button type="button" class="btn btn-danger btn-xs" 
+							th:onclick="${'deleteObj(' + x.id + ');'}">L&ouml;schen</button></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+
+		<!-- neues Objekt anlegen -->
+
+		<form id="insertObj" name="objInsert" action="/admin/obj" method="POST">
+			<h2>Objekt hinzuf&uuml;gen</h2>
+			
+			<div class="form-group">
+				<label for="otypId">Objekttyp:</label> 
+				<select class="form-control" id="otypId" name="otypId">
+					<option th:each="x : ${xOtypArray}" th:value="${x.id}" th:text="${x.name}">???</option>
+				</select>
+			</div>
+			
+			<div class="form-group">
+				<label for="objName">Bezeichnung:</label> 
+				<input type="text" class="form-control" id="objName" 
+					name="objName"/>
+			</div>
+			
+			<input type="hidden" th:if="${_csrf}"
+				th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+
+			<input type="hidden" name="objTask" value="INSERT"/>
+			
+			<button type="submit" class="btn btn-success">Hinzuf&uuml;gen</button>
+		</form>
+		
+		<!-- Objekt löschen -->
+		
+		<form id="deleteObj" name="objDelete" action="/admin/obj" method="POST">
+			<input type="hidden" name="objId" value="-1"/>
+			<input type="hidden" name="objTask" value="DELETE"/>
+		</form>
+		
+	</div><!-- Ende/Container -->
+</body></html>

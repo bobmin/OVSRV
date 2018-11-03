@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head lang="en" th:replace="/fragments :: basics">
+	<!-- fragments.html/basics -->
+</head>
+<body>
+	<div th:replace="/fragments :: header">
+		<!-- fragments.html/header -->
+	</div>
+
+	<div class="container">
+	
+		<h2 th:text="${'Attribute vom Formular &quot;' + xForm.name + '&quot;'}">Attribute von "Abc"</h2>
+		
+		<div th:if="${#lists.isEmpty( elements )}">
+			<p>Noch keine Attribute verkn&uuml;pft.</p>
+		</div>
+
+		<div th:unless="${#lists.isEmpty( elements )}">
+			<table class="table table-striped table-hover">
+				<thead>
+					<tr>
+						<th>ID</th>
+						<th>Bezeichnung</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:each="fa : ${elements}">
+						<td th:text="${fa.attr.id}">987</td>
+						<td th:text="${fa.attr.name}">Bezeichnung</td>
+						<td><button type="button" class="btn btn-danger btn-xs" 
+							th:onclick="${'deleteFa(' + formId + ',' + fa.attr.id + ');'}">L&ouml;schen</button></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+
+		<h2>Attribut hinzuf&uuml;gen</h2>
+		
+		<form id="doItFa" name="doItFa" th:action="${'/admin/form/' + xForm.id + '/attr'}" method="POST">
+			<div class="form-group">
+				<label for="attrId">Eigenschaft:</label> 
+				<select class="form-control" id="attrId" name="attrId">
+					<option th:each="attr : ${attrArray}" 
+						th:value="${attr.id}" 
+						th:text="${attr.name}">???</option>
+				</select>
+			</div>
+			<input type="hidden" th:if="${_csrf}"
+				th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+			<input type="hidden" name="attrTask" value="INSERT" />			
+			<button type="submit" class="btn btn-success">Hinzuf&uuml;gen</button>
+		</form>
+		
+		<div th:replace="/fragments :: back_to_form">
+			<!-- fragments.html/back_to_form -->
+		</div>
+		
+	</div><!-- Ende/Container -->
+</body></html>

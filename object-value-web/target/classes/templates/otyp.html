@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head lang="en" th:replace="/fragments :: basics">
+	<!-- fragments.html/basics -->
+</head>
+<body>
+	<div th:replace="/fragments :: header">
+		<!-- fragments.html/header -->
+	</div>
+
+	<div class="container">
+		<h2>Gespeicherte Objekttypen</h2>
+
+		<div th:if="${#lists.isEmpty( elements )}">
+			<p>Noch keine Daten gespeichert.</p>
+		</div>
+		
+		<div th:unless="${#lists.isEmpty( elements )}">
+			<table class="table table-striped table-hover">
+				<thead>
+					<tr>
+						<th>ID</th>
+						<th>Bezeichnung</th>
+						<th>Beschreibung</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:each="me : ${elements}">
+						<td th:text="${me.id}">987</td>
+						<td th:text="${me.name}">Bezeichnung</td>
+						<td th:text="${me.description}">Beschreibung</td>
+						<td><button type="button" class="btn btn-default btn-xs"
+							th:onclick="${'gotoListEdit(''otyp'', ' + me.id + ');'}">Bearbeiten</button></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+
+		<!-- NEUANLAGE -->
+		
+		<form th:if="${editOtyp} == null" action="/admin/otyp" method="POST">
+			<h2>Objekttyp hinzuf&uuml;gen</h2>
+
+			<div class="form-group">
+				<label for="name">Name:</label> <input type="text"
+					class="form-control" id="name" name="name" />
+			</div>
+			<div class="form-group">
+				<label for="description">Beschreibung:</label> <input type="text"
+					class="form-control" id="description" name="description" />
+			</div>
+
+			<input type="hidden" th:if="${_csrf}"
+				th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+
+			<button type="submit" class="btn btn-success">Hinzuf&uuml;gen</button>
+		</form>
+		
+		<!-- BEARBEITUNG -->
+		
+		<form th:if="${editOtyp} != null" method="POST"
+			th:action="${'/admin/otyp/' + editOtyp.id}">
+			
+			<h2>Objekttyp bearbeiten</h2>
+
+			<div class="form-group">
+				<label for="name">Name:</label> 
+				<input type="text" class="form-control" id="name" name="editName" 
+					th:value="${editOtyp.name}" />
+			</div>
+			<div class="form-group">
+				<label for="description">Beschreibung:</label> 
+				<input type="text" class="form-control" id="description" 
+					name="editDescription" th:value="${editOtyp.description}" />
+			</div>
+
+			<input type="hidden" th:if="${_csrf}"
+				th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+
+			<button type="submit" class="btn btn-primary">Speichern</button>
+			<button type="button" class="btn btn-default"
+					th:onclick="${'gotoEntity(''otyp'', -1);'}">Abbrechen</button>
+		</form>
+		
+	</div>
+</body>
+</html>

@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head lang="en" th:replace="/fragments :: basics">
+	<!-- fragments.html/basics -->
+</head>
+<body>
+	<div th:replace="/fragments :: header">
+		<!-- fragments.html/header -->
+	</div>
+
+	<div class="container">
+	
+		<h2>Gespeicherte Eigenschaften</h2>
+		
+		<div th:if="${#lists.isEmpty( elements )}">
+			<p>Noch keine Daten gespeichert.</p>
+		</div>
+		
+		<div th:unless="${#lists.isEmpty( elements )}">
+			<table class="table table-striped table-hover">
+				<thead>
+					<tr>
+						<th>ID</th>
+						<th>Bezeichnung</th>
+						<th>Datentyp</th>
+						<th>Lookup</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:each="attr : ${elements}">
+						<td th:text="${attr.id}">987</td>
+						<td th:text="${attr.name}">Bezeichnung</td>
+						<td th:text="${attr.atyp.name}">Datentyp</td>
+						<td><span 
+							th:if="${attr.lookup} == null">&mdash;</span><span 
+							th:if="${attr.lookup} != null" th:text="${attr.lookup.name}">Lookup</span></td>
+						<td><button type="button" class="btn btn-default btn-xs"
+							th:onclick="${'gotoListEdit(''attr'', ' + attr.id + ');'}">Bearbeiten</button></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+
+		<!-- NEUANLAGE -->
+
+		<form name="insertAtyp" th:if="${editAttr} == null" action="/admin/attr" method="POST">
+		
+			<h2>Eigenschaft hinzuf&uuml;gen</h2>
+		
+			<div class="form-group">
+				<label for="attrName">Bezeichnung:</label>
+				<input type="text" class="form-control" id="attrName" name="attrName" />
+			</div>
+			
+			<div class="form-group">
+				<label for="atypId">Datentyp:</label> 
+				<select class="form-control" id="atypId" name="atypId" onchange="changeAtyp()">
+					<option></option>
+					<option th:each="atyp : ${atypArray}" th:value="${atyp.id}" th:text="${atyp.name}">???</option>
+				</select>
+			</div>
+			
+			<div class="form-group">
+				<label for="otypId">Lookup:</label> 
+				<select class="form-control" id="otypId" name="otypId" disabled="true">
+					<option></option>
+					<option th:each="otyp : ${otypArray}" th:value="${otyp.id}" 
+						th:text="${otyp.name}">???</option>
+				</select>
+			</div>
+			<input type="hidden" th:if="${_csrf}"
+				th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+			<button type="submit" class="btn btn-success">Hinzuf&uuml;gen</button>
+		</form>
+		
+		<!-- BEARBEITUNG -->
+
+		<form th:if="${editAttr} != null"  method="POST"
+			th:action="${'/admin/attr/' + editAttr.id}">
+		
+			<h2>Eigenschaft bearbeiten</h2>
+		
+			<div class="form-group">
+				<label for="attrName">Bezeichnung:</label> <input type="text"
+					class="form-control" id="attrName" name="editAttrName"
+					th:value="${editAttr.name}" />
+			</div>
+			<div class="form-group">
+				<label for="atypId">Datentyp:</label> 
+				<select class="form-control" id="atypId" name="editAtypId"
+					disabled="true">
+					<option th:each="atyp : ${atypArray}" th:value="${atyp.id}"
+						th:selected="${editAttr.atyp.column == atyp.column}" 
+						th:text="${atyp.name}">???</option>
+				</select>
+			</div>
+			<div class="form-group">
+				<label for="otypId">Lookup:</label> 
+				<select class="form-control" id="otypId" name="editOtypId"
+					disabled="true">
+					<option></option>
+					<option th:each="otyp : ${otypArray}" th:value="${otyp.id}"
+						th:selected="${editAttr.lookup != null and editAttr.lookup.id == otyp.id}" 
+						th:text="${otyp.name}">???</option>
+				</select>
+			</div>
+			<input type="hidden" th:if="${_csrf}"
+				th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+			<button type="submit" class="btn btn-primary">Speichern</button>
+			<button type="button" class="btn btn-default"
+					th:onclick="${'gotoEntity(''attr'', -1);'}">Abbrechen</button>
+		</form>
+		
+	</div><!-- Ende/Container -->
+</body></html>

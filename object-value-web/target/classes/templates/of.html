@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head lang="en" th:replace="/fragments :: basics">
+	<!-- fragments.html/basics -->
+</head>
+<body>
+	<div th:replace="/fragments :: header">
+		<!-- fragments.html/header -->
+	</div>
+
+	<div class="container">
+	
+		<h2 th:text="${'Objekttypen vom Formular &quot;' + xForm.name + '&quot;'}">Attribute von "Abc"</h2>
+		
+		<div th:if="${#lists.isEmpty( elements )}">
+			<p>Noch keine Objekttypen verkn&uuml;pft.</p>
+		</div>
+		
+		<div th:unless="${#lists.isEmpty( elements )}">
+			<table class="table table-striped table-hover">
+				<thead>
+					<tr>
+						<th>ID</th>
+						<th>Bezeichnung</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:each="of : ${elements}">
+						<td th:text="${of.otypId}">987</td>
+						<td th:text="${of.otypName}">Bezeichnung</td>
+						<td><button type="button" class="btn btn-danger btn-xs" 
+							th:onclick="${'deleteOf(' + xForm.id + ',' + of.otypId + ');'}">L&ouml;schen</button></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+
+		<form id="doItOf" name="doItOf" th:action="${'/admin/form/' + xForm.id + '/otyp'}" method="POST">
+			<h2>Objekttyp hinzuf&uuml;gen</h2>
+			<div class="form-group">
+				<label for="otypId">Formular:</label> 
+				<select class="form-control" id="otypId" name="otypId">
+					<option th:each="otyp : ${otypArray}" th:value="${otyp.id}" th:text="${otyp.name}">???</option>
+				</select>
+			</div>
+			<input type="hidden" th:if="${_csrf}"
+				th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+			<input type="hidden" name="otypTask" value="INSERT" />
+			<button type="submit" class="btn btn-success">Hinzuf&uuml;gen</button>
+		</form>
+		
+		<div th:replace="/fragments :: back_to_form">
+			<!-- fragments.html/back_to_form -->
+		</div>
+		
+	</div><!-- Ende/Container -->
+</body></html>
